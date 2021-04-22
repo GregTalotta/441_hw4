@@ -171,18 +171,18 @@ int main()
   printf("preconvert");
   // Convert image into a flat array of chars with the value 0-255 of the
   // greyscale intensity
-  RGBQUAD aPixel;
-  char *pixels;
-  int pixIndex = 0;
-  pixels = (char *)malloc(sizeof(char) * imgWidth * imgHeight);
-  for (int i = 0; i < imgHeight; i++)
-    for (int j = 0; j < imgWidth; j++)
-    {
-      FreeImage_GetPixelColor(image, j, i, &aPixel);
-      char grey = ((aPixel.rgbRed + aPixel.rgbGreen + aPixel.rgbBlue) / 3);
-      pixels[pixIndex++] = grey;
-    }
-  char *dev_pixels;
+  // RGBQUAD aPixel;
+  // char *pixels;
+  // int pixIndex = 0;
+  // pixels = (char *)malloc(sizeof(char) * imgWidth * imgHeight);
+  // for (int i = 0; i < imgHeight; i++)
+  //   for (int j = 0; j < imgWidth; j++)
+  //   {
+  //     FreeImage_GetPixelColor(image, j, i, &aPixel);
+  //     char grey = ((aPixel.rgbRed + aPixel.rgbGreen + aPixel.rgbBlue) / 3);
+  //     pixels[pixIndex++] = grey;
+  //   }
+  // char *dev_pixels;
   // cudaMalloc((void**)&dev_pixels, sizeof(char) * imgWidth * imgHeight);
   // cudaMemcpy(dev_pixels, pixels,sizeof(char) * imgWidth * imgHeight, cudaMemcpyHostToDevice);
   printf("precopy");
@@ -207,7 +207,7 @@ int main()
   //     FreeImage_SetPixelColor(bitmap, i, j, &aPixel);
   //   }
   // }
-  FreeImage_Save(FIF_PNG, bitmap, "coins-edge.png", 0);
+  // FreeImage_Save(FIF_PNG, bitmap, "coins-edge.png", 0);
 
 
   // ** free all my pointers/arrays
