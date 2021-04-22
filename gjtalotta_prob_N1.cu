@@ -158,9 +158,11 @@ int main()
   imgWidth = FreeImage_GetWidth(image);
   imgHeight = FreeImage_GetHeight(image);
 
-  //** find dimesntion for blocks
-  dim3 threadsPerBlock(2, 6); //one sorbo area
-  dim3 numBlocks(imgHeight, imgWidth); //probably block per pixel
+  // 
+  int * c;
+  int * dev_c;
+  c = (int *)malloc(sizeof(int) * imgWidth * imgHeight);
+  cudaMalloc((void**)&dev_c, sizeof(int) * imgWidth * imgHeight);
 
   // Convert image into a flat array of chars with the value 0-255 of the
   // greyscale intensity
@@ -175,6 +177,15 @@ int main()
       char grey = ((aPixel.rgbRed + aPixel.rgbGreen + aPixel.rgbBlue) / 3);
       pixels[pixIndex++] = grey;
     }
+  char *dec_pixels;
+  cudaMalloc((void**)&dev_pixels, sizeof(char) * imgWidth * imgHeight);
+  cudaMemcpy(dev_pixels, pixels,sizeof(char) * imgWidth * imgHeight, cudaMemcpyHostToDevice);
+
+  //** find dimesntion for blocks
+  dim3 threadsPerBlock(2, 6); //one sorbo area
+  dim3 numBlocks(imgHeight, imgWidth); //probably block per pixel
+  sobel<<<numBlocks, threadsPerBlock>>>(imgWidth, (int) threadsPerBlock,dev_pixels, dev_c);
+  cudaMemcpy(c, dev_c, sizeof(int) * imgWidth * imgHeight, cudaMemcpyDeviceToHost);
 
   
   // Apply sobel operator to pixels, ignoring the borders
@@ -184,7 +195,7 @@ int main()
   {
     for (int j = 1; j < imgHeight - 1; j++)
     {
-      int sVal = sobel(i, j, imgWidth, pixels);
+      int sVal = c[j*imgWidth + i];
       aPixel.rgbRed = sVal;
       aPixel.rgbGreen = sVal;
       aPixel.rgbBlue = sVal;
@@ -195,6 +206,9 @@ int main()
 
 
   // ** free all my pointers/arrays
+  free(c);
+  free(dev_c);
+  free(dev_pixels);
   free(pixels);
   FreeImage_Unload(bitmap);
   FreeImage_Unload(image);
