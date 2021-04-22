@@ -167,7 +167,7 @@ int main()
   int * c;
   int * dev_c;
   c = (int *)malloc(sizeof(int) * imgWidth * imgHeight);
-  cudaMalloc((void**)&dev_c, sizeof(int) * imgWidth * imgHeight);
+  // cudaMalloc((void**)&dev_c, sizeof(int) * imgWidth * imgHeight);
   printf("preconvert");
   // Convert image into a flat array of chars with the value 0-255 of the
   // greyscale intensity
@@ -183,7 +183,7 @@ int main()
       pixels[pixIndex++] = grey;
     }
   char *dev_pixels;
-  cudaMalloc((void**)&dev_pixels, sizeof(char) * imgWidth * imgHeight);
+  // cudaMalloc((void**)&dev_pixels, sizeof(char) * imgWidth * imgHeight);
   // cudaMemcpy(dev_pixels, pixels,sizeof(char) * imgWidth * imgHeight, cudaMemcpyHostToDevice);
   printf("precopy");
   //** find dimesntion for blocks
