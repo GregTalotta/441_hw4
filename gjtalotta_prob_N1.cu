@@ -150,27 +150,27 @@ int main()
   FreeImage_Initialise();
   atexit(FreeImage_DeInitialise);
   printf("preimg load");
-  // Load image and get the width and height
-  FIBITMAP *image;
-  image = FreeImage_Load(FIF_PNG, "coins.png", 0);
-  if (image == NULL)
-  {
-    printf("Image Load Problem\n");
-    exit(0);
-  }
-  int imgWidth;
-  int imgHeight;
-  imgWidth = FreeImage_GetWidth(image);
-  imgHeight = FreeImage_GetHeight(image);
-  printf("premaloc 1");
-  // 
-  int * c;
-  int * dev_c;
+  // // Load image and get the width and height
+  // FIBITMAP *image;
+  // image = FreeImage_Load(FIF_PNG, "coins.png", 0);
+  // if (image == NULL)
+  // {
+  //   printf("Image Load Problem\n");
+  //   exit(0);
+  // }
+  // int imgWidth;
+  // int imgHeight;
+  // imgWidth = FreeImage_GetWidth(image);
+  // imgHeight = FreeImage_GetHeight(image);
+  // printf("premaloc 1");
+  // // 
+  // int * c;
+  // int * dev_c;
   // c = (int *)malloc(sizeof(int) * imgWidth * imgHeight);
   // cudaMalloc((void**)&dev_c, sizeof(int) * imgWidth * imgHeight);
-  printf("preconvert");
-  // Convert image into a flat array of chars with the value 0-255 of the
-  // greyscale intensity
+  // printf("preconvert");
+  // // Convert image into a flat array of chars with the value 0-255 of the
+  // // greyscale intensity
   // RGBQUAD aPixel;
   // char *pixels;
   // int pixIndex = 0;
@@ -185,16 +185,16 @@ int main()
   // char *dev_pixels;
   // cudaMalloc((void**)&dev_pixels, sizeof(char) * imgWidth * imgHeight);
   // cudaMemcpy(dev_pixels, pixels,sizeof(char) * imgWidth * imgHeight, cudaMemcpyHostToDevice);
-  printf("precopy");
-  //** find dimesntion for blocks
-  dim3 threadsPerBlock(2, 6); //one sorbo area
-  dim3 numBlocks(imgHeight, imgWidth); //probably block per pixel
+  // printf("precopy");
+  // //** find dimesntion for blocks
+  // dim3 threadsPerBlock(2, 6); //one sorbo area
+  // dim3 numBlocks(imgHeight, imgWidth); //probably block per pixel
   // sobel<<<numBlocks, threadsPerBlock>>>(imgWidth, dev_pixels, dev_c);
   // cudaMemcpy(c, dev_c, sizeof(int) * imgWidth * imgHeight, cudaMemcpyDeviceToHost);
 
   
-  // Apply sobel operator to pixels, ignoring the borders
-  // ** chnage this nested for loop to kernal calls
+  // // Apply sobel operator to pixels, ignoring the borders
+  // // ** chnage this nested for loop to kernal calls
   // FIBITMAP *bitmap = FreeImage_Allocate(imgWidth, imgHeight, 24);
   // for (int i = 1; i < imgWidth - 1; i++)
   // {
