@@ -96,7 +96,8 @@ __global__ void sobel(int width, char *pixels, int *c)
     }
   }
   // store in shared mem
-  cache[cacheIndex] = pixValue * pixels[x + xOffset, y + yOffset, width];
+  int temp = pixValue * pixels[x + xOffset, y + yOffset, width]
+  cache[cacheIndex] = temp;
 
   // //*logic probably in a while loop
   // int temp = 0;
