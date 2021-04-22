@@ -169,23 +169,23 @@ int main()
   c = (int *)malloc(sizeof(int) * imgWidth * imgHeight);
   cudaMalloc((void**)&dev_c, sizeof(int) * imgWidth * imgHeight);
   printf("preconvert\n");
-  // // Convert image into a flat array of chars with the value 0-255 of the
-  // // greyscale intensity
-  // RGBQUAD aPixel;
-  // char *pixels;
-  // int pixIndex = 0;
-  // pixels = (char *)malloc(sizeof(char) * imgWidth * imgHeight);
-  // for (int i = 0; i < imgHeight; i++)
-  //   for (int j = 0; j < imgWidth; j++)
-  //   {
-  //     FreeImage_GetPixelColor(image, j, i, &aPixel);
-  //     char grey = ((aPixel.rgbRed + aPixel.rgbGreen + aPixel.rgbBlue) / 3);
-  //     pixels[pixIndex++] = grey;
-  //   }
-  // char *dev_pixels;
-  // cudaMalloc((void**)&dev_pixels, sizeof(char) * imgWidth * imgHeight);
-  // cudaMemcpy(dev_pixels, pixels,sizeof(char) * imgWidth * imgHeight, cudaMemcpyHostToDevice);
-  // printf("precopy");
+  // Convert image into a flat array of chars with the value 0-255 of the
+  // greyscale intensity
+  RGBQUAD aPixel;
+  char *pixels;
+  int pixIndex = 0;
+  pixels = (char *)malloc(sizeof(char) * imgWidth * imgHeight);
+  for (int i = 0; i < imgHeight; i++)
+    for (int j = 0; j < imgWidth; j++)
+    {
+      FreeImage_GetPixelColor(image, j, i, &aPixel);
+      char grey = ((aPixel.rgbRed + aPixel.rgbGreen + aPixel.rgbBlue) / 3);
+      pixels[pixIndex++] = grey;
+    }
+  char *dev_pixels;
+  cudaMalloc((void**)&dev_pixels, sizeof(char) * imgWidth * imgHeight);
+  cudaMemcpy(dev_pixels, pixels,sizeof(char) * imgWidth * imgHeight, cudaMemcpyHostToDevice);
+  printf("precopy");
   // //** find dimesntion for blocks
   // dim3 threadsPerBlock(2, 6); //one sorbo area
   // dim3 numBlocks(imgHeight, imgWidth); //probably block per pixel
