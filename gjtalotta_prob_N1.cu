@@ -162,13 +162,13 @@ int main()
   int imgHeight;
   imgWidth = FreeImage_GetWidth(image);
   imgHeight = FreeImage_GetHeight(image);
-  printf("premaloc 1");
+  printf("premaloc 1\n");
   // // 
-  // int * c;
-  // int * dev_c;
-  // c = (int *)malloc(sizeof(int) * imgWidth * imgHeight);
-  // cudaMalloc((void**)&dev_c, sizeof(int) * imgWidth * imgHeight);
-  // printf("preconvert");
+  int * c;
+  int * dev_c;
+  c = (int *)malloc(sizeof(int) * imgWidth * imgHeight);
+  cudaMalloc((void**)&dev_c, sizeof(int) * imgWidth * imgHeight);
+  printf("preconvert\n");
   // // Convert image into a flat array of chars with the value 0-255 of the
   // // greyscale intensity
   // RGBQUAD aPixel;
