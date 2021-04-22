@@ -28,8 +28,17 @@ __device__ int pixelIndex(int x, int y, int width)
 
 // Returns the sobel value for pixel x,y
 // ** convert to void with CUDA mem transfer
-__global__ int sobel(int x, int y, int width, char *pixels)
+__global__ int sobel(int width, int threadsPerBlock,char *pixels)
 {
+  //** tricky
+  __shared__ int cache[12]; 
+  int x = blockIdx.x;
+  int y = blockIdx.y;
+  int tid = threadIdx.x + (blockIdx.x * blockDim.x); // wrong probably
+  int cacheIndex = pixelIndex(threadIdx.x, threadIdx.y, 12);
+  
+  //*logic probably in a while loop
+  int temp = 0;
   int x00 = -1;
   int x20 = 1;
   int x01 = -2;
@@ -56,6 +65,7 @@ __global__ int sobel(int x, int y, int width, char *pixels)
   y12 *= pixels[pixelIndex(x, y + 1, width)];
   y22 *= pixels[pixelIndex(x + 1, y + 1, width)];
 
+  // **do this in thread 0 and save sqrt in mem not return
   int px = x00 + x01 + x02 + x20 + x21 + x22;
   int py = y00 + y10 + y20 + y02 + y12 + y22;
   return sqrt(px * px + py * py);
@@ -80,8 +90,8 @@ int main()
   imgHeight = FreeImage_GetHeight(image);
 
   //** find dimesntion for blocks
-  dim3 threaDsPerBlock(thing, thing);
-  dim3 numBlocks(thing, thing);
+  dim3 threadsPerBlock(2, 6); //one sorbo area
+  dim3 numBlocks(imgHeight, imgWidth); //probably block per pixel
 
   // Convert image into a flat array of chars with the value 0-255 of the
   // greyscale intensity
@@ -97,6 +107,7 @@ int main()
       pixels[pixIndex++] = grey;
     }
 
+  
   // Apply sobel operator to pixels, ignoring the borders
   // ** chnage this nested for loop to kernal calls
   FIBITMAP *bitmap = FreeImage_Allocate(imgWidth, imgHeight, 24);
