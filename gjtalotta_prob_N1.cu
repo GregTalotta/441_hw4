@@ -34,37 +34,96 @@ __global__ void sobel(int width, int threadsPerBlock,char *pixels, int *c)
   __shared__ int cache[12]; 
   int x = blockIdx.x;
   int y = blockIdx.y;
-  in blockIndex = pixelIndex(x, y, width);
+  in retIndex = pixelIndex(x, y, width);
   int tid = threadIdx.x + (blockIdx.x * blockDim.x); // wrong probably
   int cacheIndex = pixelIndex(threadIdx.x, threadIdx.y, 12);
   
-  //*logic probably in a while loop
-  int temp = 0;
-  int x00 = -1;
-  int x20 = 1;
-  int x01 = -2;
-  int x21 = 2;
-  int x02 = -1;
-  int x22 = 1;
-  x00 *= pixels[pixelIndex(x - 1, y - 1, width)];
-  x01 *= pixels[pixelIndex(x - 1, y, width)];
-  x02 *= pixels[pixelIndex(x - 1, y + 1, width)];
-  x20 *= pixels[pixelIndex(x + 1, y - 1, width)];
-  x21 *= pixels[pixelIndex(x + 1, y, width)];
-  x22 *= pixels[pixelIndex(x + 1, y + 1, width)];
+  // ** individual thread logic
+  int xOffset = 0;
+  int yOffset = 0;
+  int primaryOffset = 0;
+  int secondaryOffset = 0;
+  if(threadIdx.x <3){
+    primaryOffset = -1;
+  }
+  else{
+    primaryOffset = 1;
+  }
+  // secondary offset 
+  if((threadIdx.x == 0)||(threadIdx.x == 3)){
+    secondaryOffset = -1;
+  }
+  else if((threadIdx.x == 2)||(threadIdx.x == 5)){
+    secondaryOffset = 1;
+  }
+  // midify the actual offsets
+  if(threadIdx.y ==0){
+    xOffset = primaryOffset;
+    yOffset = secondaryOffset;
+  }
+  else{
+    yOffset = primaryOffset;
+    xOffset = secondaryOffset;
+  }
+  int pixValue = 0;
+  if(threadIdx.y ==0){
+    if((threadIdx.x == 0)||(threadIdx.x == 4)){
+      pixValue = -1;
+    }
+    else if((threadIdx.x == 1)||(threadIdx.x == 5)){
+      pixValue = 1;
+    }
+    else if(threadIdx.x == 2){
+      pixValue = -2
+    }
+    else if(threadIdx.x == 3){
+      pixValue = 2;
+    }
+  }else{
+    if((threadIdx.x == 0)||(threadIdx.x == 2)){
+      pixValue = -1;
+    }
+    else if((threadIdx.x == 3)||(threadIdx.x == 5)){
+      pixValue = 1;
+    }
+    else if(threadIdx.x == 1){
+      pixValue = -2
+    }
+    else if(threadIdx.x == 4){
+      pixValue = 2;
+    }
+  }
+  // store in shared mem
+  cache[cacheIndex] = pixValue * pixels[x + xOffset, y + yOffset, width];
 
-  int y00 = -1;
-  int y10 = -2;
-  int y20 = -1;
-  int y02 = 1;
-  int y12 = 2;
-  int y22 = 1;
-  y00 *= pixels[pixelIndex(x - 1, y - 1, width)];
-  y10 *= pixels[pixelIndex(x, y - 1, width)];
-  y20 *= pixels[pixelIndex(x + 1, y - 1, width)];
-  y02 *= pixels[pixelIndex(x - 1, y + 1, width)];
-  y12 *= pixels[pixelIndex(x, y + 1, width)];
-  y22 *= pixels[pixelIndex(x + 1, y + 1, width)];
+  // //*logic probably in a while loop
+  // int temp = 0;
+
+  // int x00 = -1;
+  // int x20 = 1;
+  // int x01 = -2;
+  // int x21 = 2;
+  // int x02 = -1;
+  // int x22 = 1;
+  // x00 *= pixels[pixelIndex(x - 1, y - 1, width)];
+  // x01 *= pixels[pixelIndex(x - 1, y, width)];
+  // x02 *= pixels[pixelIndex(x - 1, y + 1, width)];
+  // x20 *= pixels[pixelIndex(x + 1, y - 1, width)];
+  // x21 *= pixels[pixelIndex(x + 1, y, width)];
+  // x22 *= pixels[pixelIndex(x + 1, y + 1, width)];
+
+  // int y00 = -1;
+  // int y10 = -2;
+  // int y20 = -1;
+  // int y02 = 1;
+  // int y12 = 2;
+  // int y22 = 1;
+  // y00 *= pixels[pixelIndex(x - 1, y - 1, width)];
+  // y10 *= pixels[pixelIndex(x, y - 1, width)];
+  // y20 *= pixels[pixelIndex(x + 1, y - 1, width)];
+  // y02 *= pixels[pixelIndex(x - 1, y + 1, width)];
+  // y12 *= pixels[pixelIndex(x, y + 1, width)];
+  // y22 *= pixels[pixelIndex(x + 1, y + 1, width)];
 
   // **do this in thread 0 and save sqrt in mem not return
   if((threadIdx.x == 0) && (threadIdx.y == 0)){
@@ -77,7 +136,7 @@ __global__ void sobel(int width, int threadsPerBlock,char *pixels, int *c)
     for(int i = 6; i < 12; ++i){
       py += cache[i];
     }
-    c[blockIndex] = sqrt(px * px + py * py); // store in mem
+    c[retIndex] = sqrt(px * px + py * py); // store in mem
   }
 }
 
