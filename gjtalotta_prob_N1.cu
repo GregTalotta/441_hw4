@@ -32,8 +32,8 @@ __global__ void sobel(int width, char *pixels, int *c)
 {
   //** tricky
   __shared__ int cache[12]; 
-  int x = blockIdx.x;
-  int y = blockIdx.y;
+  int x = blockIdx.x +1;
+  int y = blockIdx.y +1;
   int retIndex = pixelIndex(x, y, width);
   
   int cacheIndex = pixelIndex(threadIdx.x, threadIdx.y, 12);
