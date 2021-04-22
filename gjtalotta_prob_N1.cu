@@ -212,8 +212,8 @@ int main()
 
   // ** free all my pointers/arrays
   free(c);
-  free(dev_c);
-  free(dev_pixels);
+  // free(dev_c);
+  // free(dev_pixels);
   free(pixels);
   FreeImage_Unload(bitmap);
   FreeImage_Unload(image);
