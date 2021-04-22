@@ -190,8 +190,8 @@ int main()
   dim3 threadsPerBlock(2, 6); //one sorbo area
   dim3 numBlocks(imgHeight, imgWidth); //probably block per pixel
   sobel<<<numBlocks, threadsPerBlock>>>(imgWidth, dev_pixels, dev_c);
-  // cudaMemcpy(c, dev_c, sizeof(int) * imgWidth * imgHeight, cudaMemcpyDeviceToHost);
-
+  cudaMemcpy(c, dev_c, sizeof(int) * imgWidth * imgHeight, cudaMemcpyDeviceToHost);
+  printf("postcopy\n");
   
   // // Apply sobel operator to pixels, ignoring the borders
   // // ** chnage this nested for loop to kernal calls
