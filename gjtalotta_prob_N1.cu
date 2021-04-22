@@ -28,7 +28,7 @@ __device__ int pixelIndex(int x, int y, int width)
 
 // Returns the sobel value for pixel x,y
 // ** convert to void with CUDA mem transfer
-__global__ void sobel(int width, int threadsPerBlock,char *pixels, int *c)
+__global__ void sobel(int width, char *pixels, int *c)
 {
   //** tricky
   __shared__ int cache[12]; 
@@ -184,7 +184,7 @@ int main()
   //** find dimesntion for blocks
   dim3 threadsPerBlock(2, 6); //one sorbo area
   dim3 numBlocks(imgHeight, imgWidth); //probably block per pixel
-  sobel<<<numBlocks, threadsPerBlock>>>(imgWidth, (int) threadsPerBlock,dev_pixels, dev_c);
+  sobel<<<numBlocks, threadsPerBlock>>>(imgWidth, dev_pixels, dev_c);
   cudaMemcpy(c, dev_c, sizeof(int) * imgWidth * imgHeight, cudaMemcpyDeviceToHost);
 
   
