@@ -136,7 +136,7 @@ __global__ void sobel(int width, char *pixels, int *c)
     for(int i = 6; i < 12; ++i){
       py += cache[i];
     }
-    c[retIndex] = sqrt(px * px + py * py); // store in mem
+    c[retIndex] = (int) sqrtf(px * px + py * py); // store in mem
   }
 }
 
