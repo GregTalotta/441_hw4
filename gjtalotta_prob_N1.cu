@@ -34,7 +34,7 @@ __global__ void sobel(int width, int threadsPerBlock,char *pixels, int *c)
   __shared__ int cache[12]; 
   int x = blockIdx.x;
   int y = blockIdx.y;
-  in retIndex = pixelIndex(x, y, width);
+  int retIndex = pixelIndex(x, y, width);
   int tid = threadIdx.x + (blockIdx.x * blockDim.x); // wrong probably
   int cacheIndex = pixelIndex(threadIdx.x, threadIdx.y, 12);
   
@@ -74,7 +74,7 @@ __global__ void sobel(int width, int threadsPerBlock,char *pixels, int *c)
       pixValue = 1;
     }
     else if(threadIdx.x == 2){
-      pixValue = -2
+      pixValue = -2;
     }
     else if(threadIdx.x == 3){
       pixValue = 2;
