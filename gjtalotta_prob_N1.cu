@@ -146,10 +146,10 @@ __global__ void sobel(int width, char *pixels, int *c)
 
 int main()
 {
-  printf("start");
+  printf("start\n");
   FreeImage_Initialise();
   atexit(FreeImage_DeInitialise);
-  printf("preimg load");
+  printf("preimg load\n");
   // Load image and get the width and height
   FIBITMAP *image;
   image = FreeImage_Load(FIF_PNG, "coins.png", 0);
@@ -158,11 +158,11 @@ int main()
     printf("Image Load Problem\n");
     exit(0);
   }
-  // int imgWidth;
-  // int imgHeight;
-  // imgWidth = FreeImage_GetWidth(image);
-  // imgHeight = FreeImage_GetHeight(image);
-  // printf("premaloc 1");
+  int imgWidth;
+  int imgHeight;
+  imgWidth = FreeImage_GetWidth(image);
+  imgHeight = FreeImage_GetHeight(image);
+  printf("premaloc 1");
   // // 
   // int * c;
   // int * dev_c;
