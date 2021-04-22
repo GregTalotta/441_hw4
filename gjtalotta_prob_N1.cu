@@ -195,18 +195,18 @@ int main()
   
   // Apply sobel operator to pixels, ignoring the borders
   // ** chnage this nested for loop to kernal calls
-  FIBITMAP *bitmap = FreeImage_Allocate(imgWidth, imgHeight, 24);
-  for (int i = 1; i < imgWidth - 1; i++)
-  {
-    for (int j = 1; j < imgHeight - 1; j++)
-    {
-      int sVal = c[j*imgWidth + i];
-      aPixel.rgbRed = sVal;
-      aPixel.rgbGreen = sVal;
-      aPixel.rgbBlue = sVal;
-      FreeImage_SetPixelColor(bitmap, i, j, &aPixel);
-    }
-  }
+  // FIBITMAP *bitmap = FreeImage_Allocate(imgWidth, imgHeight, 24);
+  // for (int i = 1; i < imgWidth - 1; i++)
+  // {
+  //   for (int j = 1; j < imgHeight - 1; j++)
+  //   {
+  //     int sVal = c[j*imgWidth + i];
+  //     aPixel.rgbRed = sVal;
+  //     aPixel.rgbGreen = sVal;
+  //     aPixel.rgbBlue = sVal;
+  //     FreeImage_SetPixelColor(bitmap, i, j, &aPixel);
+  //   }
+  // }
   FreeImage_Save(FIF_PNG, bitmap, "coins-edge.png", 0);
 
 
