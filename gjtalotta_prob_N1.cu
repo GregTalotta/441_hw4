@@ -146,6 +146,7 @@ __global__ void sobel(int width, char *pixels, int *c)
 
 int main()
 {
+  printf("start");
   FreeImage_Initialise();
   atexit(FreeImage_DeInitialise);
   printf("preimg load");
