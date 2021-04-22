@@ -216,6 +216,6 @@ int main()
   // free(dev_pixels);
   // free(pixels);
   FreeImage_Unload(bitmap);
-  FreeImage_Unload(image);
+  // FreeImage_Unload(image);
   return 0;
 }
