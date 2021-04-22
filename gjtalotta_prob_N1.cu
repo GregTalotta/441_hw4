@@ -35,7 +35,7 @@ __global__ void sobel(int width, int threadsPerBlock,char *pixels, int *c)
   int x = blockIdx.x;
   int y = blockIdx.y;
   int retIndex = pixelIndex(x, y, width);
-  int tid = threadIdx.x + (blockIdx.x * blockDim.x); // wrong probably
+  
   int cacheIndex = pixelIndex(threadIdx.x, threadIdx.y, 12);
   
   // ** individual thread logic
@@ -87,7 +87,7 @@ __global__ void sobel(int width, int threadsPerBlock,char *pixels, int *c)
       pixValue = 1;
     }
     else if(threadIdx.x == 1){
-      pixValue = -2
+      pixValue = -2;
     }
     else if(threadIdx.x == 4){
       pixValue = 2;
@@ -177,7 +177,7 @@ int main()
       char grey = ((aPixel.rgbRed + aPixel.rgbGreen + aPixel.rgbBlue) / 3);
       pixels[pixIndex++] = grey;
     }
-  char *dec_pixels;
+  char *dev_pixels;
   cudaMalloc((void**)&dev_pixels, sizeof(char) * imgWidth * imgHeight);
   cudaMemcpy(dev_pixels, pixels,sizeof(char) * imgWidth * imgHeight, cudaMemcpyHostToDevice);
 
