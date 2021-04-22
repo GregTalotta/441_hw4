@@ -150,14 +150,14 @@ int main()
   FreeImage_Initialise();
   atexit(FreeImage_DeInitialise);
   printf("preimg load");
-  // // Load image and get the width and height
-  // FIBITMAP *image;
-  // image = FreeImage_Load(FIF_PNG, "coins.png", 0);
-  // if (image == NULL)
-  // {
-  //   printf("Image Load Problem\n");
-  //   exit(0);
-  // }
+  // Load image and get the width and height
+  FIBITMAP *image;
+  image = FreeImage_Load(FIF_PNG, "coins.png", 0);
+  if (image == NULL)
+  {
+    printf("Image Load Problem\n");
+    exit(0);
+  }
   // int imgWidth;
   // int imgHeight;
   // imgWidth = FreeImage_GetWidth(image);
@@ -216,6 +216,6 @@ int main()
   // free(dev_pixels);
   // free(pixels);
   // FreeImage_Unload(bitmap);
-  // FreeImage_Unload(image);
+  FreeImage_Unload(image);
   return 0;
 }
