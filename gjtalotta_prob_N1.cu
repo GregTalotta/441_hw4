@@ -193,9 +193,9 @@ int main()
   cudaMemcpy(c, dev_c, sizeof(int) * imgWidth * imgHeight, cudaMemcpyDeviceToHost);
   printf("postcopy\n");
   
-  // // Apply sobel operator to pixels, ignoring the borders
-  // // ** chnage this nested for loop to kernal calls
-  // FIBITMAP *bitmap = FreeImage_Allocate(imgWidth, imgHeight, 24);
+  // Apply sobel operator to pixels, ignoring the borders
+  // ** chnage this nested for loop to kernal calls
+  FIBITMAP *bitmap = FreeImage_Allocate(imgWidth, imgHeight, 24);
   // for (int i = 1; i < imgWidth - 1; i++)
   // {
   //   for (int j = 1; j < imgHeight - 1; j++)
@@ -210,12 +210,12 @@ int main()
   // FreeImage_Save(FIF_PNG, bitmap, "coins-edge.png", 0);
 
 
-  // // ** free all my pointers/arrays
-  // free(c);
-  // free(dev_c);
-  // free(dev_pixels);
-  // free(pixels);
-  // FreeImage_Unload(bitmap);
+  // ** free all my pointers/arrays
+  free(c);
+  free(dev_c);
+  free(dev_pixels);
+  free(pixels);
+  FreeImage_Unload(bitmap);
   FreeImage_Unload(image);
   return 0;
 }
