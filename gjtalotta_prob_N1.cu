@@ -28,12 +28,13 @@ __device__ int pixelIndex(int x, int y, int width)
 
 // Returns the sobel value for pixel x,y
 // ** convert to void with CUDA mem transfer
-__global__ int sobel(int width, int threadsPerBlock,char *pixels)
+__global__ void sobel(int width, int threadsPerBlock,char *pixels, int *c)
 {
   //** tricky
   __shared__ int cache[12]; 
   int x = blockIdx.x;
   int y = blockIdx.y;
+  in blockIndex = pixelIndex(x, y, width);
   int tid = threadIdx.x + (blockIdx.x * blockDim.x); // wrong probably
   int cacheIndex = pixelIndex(threadIdx.x, threadIdx.y, 12);
   
@@ -66,9 +67,18 @@ __global__ int sobel(int width, int threadsPerBlock,char *pixels)
   y22 *= pixels[pixelIndex(x + 1, y + 1, width)];
 
   // **do this in thread 0 and save sqrt in mem not return
-  int px = x00 + x01 + x02 + x20 + x21 + x22;
-  int py = y00 + y10 + y20 + y02 + y12 + y22;
-  return sqrt(px * px + py * py);
+  if((threadIdx.x == 0) && (threadIdx.y == 0)){
+    __syncthreads();
+    int px = 0;
+    for(int i = 0; i < 6; ++i){
+      px += cache[i];
+    }
+    int py = 0;
+    for(int i = 6; i < 12; ++i){
+      py += cache[i];
+    }
+    c[blockIndex] = sqrt(px * px + py * py); // store in mem
+  }
 }
 
 int main()
