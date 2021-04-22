@@ -208,7 +208,7 @@ int main()
   //   }
   // }
   // FreeImage_Save(FIF_PNG, bitmap, "coins-edge.png", 0);
-
+  printf("postbit\n");
 
   // ** free all my pointers/arrays
   free(c);
