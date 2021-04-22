@@ -210,11 +210,11 @@ int main()
   // FreeImage_Save(FIF_PNG, bitmap, "coins-edge.png", 0);
 
 
-  // ** free all my pointers/arrays
-  free(c);
-  free(dev_c);
-  free(dev_pixels);
-  free(pixels);
+  // // ** free all my pointers/arrays
+  // free(c);
+  // free(dev_c);
+  // free(dev_pixels);
+  // free(pixels);
   FreeImage_Unload(bitmap);
   FreeImage_Unload(image);
   return 0;
