@@ -35,7 +35,7 @@ __global__ void sobel(int width, char *pixels, int *c)
   int x = blockIdx.x;
   int y = blockIdx.y;
   int retIndex = pixelIndex(x, y, width);
-  if(x <1 || y <1 || x > blockDim.x -2 || y > blockDim.y -2){
+  if(x <1 || y <1 || x > blockDim.x -1 || y > blockDim.y -1){
       return;
   }
   int cacheIndex = pixelIndex(threadIdx.x, threadIdx.y, 12);
@@ -184,13 +184,13 @@ int main()
     }
   char *dev_pixels;
   cudaMalloc((void**)&dev_pixels, sizeof(char) * imgWidth * imgHeight);
-  cudaMemcpy(dev_pixels, pixels,sizeof(char) * imgWidth * imgHeight, cudaMemcpyHostToDevice);
+  // cudaMemcpy(dev_pixels, pixels,sizeof(char) * imgWidth * imgHeight, cudaMemcpyHostToDevice);
   printf("precopy");
   //** find dimesntion for blocks
   dim3 threadsPerBlock(2, 6); //one sorbo area
   dim3 numBlocks(imgHeight, imgWidth); //probably block per pixel
-  sobel<<<numBlocks, threadsPerBlock>>>(imgWidth, dev_pixels, dev_c);
-  cudaMemcpy(c, dev_c, sizeof(int) * imgWidth * imgHeight, cudaMemcpyDeviceToHost);
+  // sobel<<<numBlocks, threadsPerBlock>>>(imgWidth, dev_pixels, dev_c);
+  // cudaMemcpy(c, dev_c, sizeof(int) * imgWidth * imgHeight, cudaMemcpyDeviceToHost);
 
   
   // Apply sobel operator to pixels, ignoring the borders
