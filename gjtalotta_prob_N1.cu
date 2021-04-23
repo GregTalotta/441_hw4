@@ -186,6 +186,7 @@ int main()
   cudaMalloc((void**)&dev_pixels, sizeof(char) * imgWidth * imgHeight);
   cudaMemcpy(dev_pixels, pixels,sizeof(char) * imgWidth * imgHeight, cudaMemcpyHostToDevice);
   printf("precopy\n");
+
   //** find dimesntion for blocks
   dim3 threadsPerBlock(2, 6); //one sorbo area
   dim3 numBlocks(imgWidth, imgHeight); //probably block per pixel
