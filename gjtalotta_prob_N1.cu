@@ -56,7 +56,7 @@ __global__ void sobel(int width, char *pixels, int *c)
 
   int px = x00 + x01 + x02 + x20 + x21 + x22;
   int py = y00 + y10 + y20 + y02 + y12 + y22;
-  c[pixelIndex(blockIdx.x, blockIdx.y, width)] = sqrt(px * px + py * py);
+  c[pixelIndex(blockIdx.x, blockIdx.y, width)] = (int)sqrtf(px * px + py * py);
 }
 
 int main()
