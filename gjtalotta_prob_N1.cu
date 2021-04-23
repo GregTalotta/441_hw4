@@ -42,92 +42,55 @@ __global__ void sobel(int width, char *pixels, int *c)
   
   // ** individual thread logic
   int xOffset = 0;
+  int pixValue;
   int yOffset = 0;
   int primaryOffset = 0;
   int secondaryOffset = 0;
-  if(threadIdx.x <3){
-    primaryOffset = -1;
-  }
-  else{
-    primaryOffset = 1;
-  }
-  // secondary offset 
-  if((threadIdx.x == 0)||(threadIdx.x == 3)){
-    secondaryOffset = -1;
-  }
-  else if((threadIdx.x == 2)||(threadIdx.x == 5)){
-    secondaryOffset = 1;
-  }
-  // midify the actual offsets
-  if(threadIdx.y ==0){
-    xOffset = primaryOffset;
-    yOffset = secondaryOffset;
-  }
-  else{
-    yOffset = primaryOffset;
-    xOffset = secondaryOffset;
-  }
-  int pixValue = 0;
-  if(threadIdx.y ==0){
-    if((threadIdx.x == 0)||(threadIdx.x == 4)){
+  int tx = threadIdx.x;
+  if(threadIdx.y == 0){
+    if(tx == 0){
       pixValue = -1;
-    }
-    else if((threadIdx.x == 1)||(threadIdx.x == 5)){
+      pixValue *= pixels[pixelIndex(x - 1, y - 1, width)];
+    }else if(tx==1){
       pixValue = 1;
-    }
-    else if(threadIdx.x == 2){
+      pixValue*= pixels[pixelIndex(x - 1, y, width)];
+    }else if(tx==2){
       pixValue = -2;
-    }
-    else if(threadIdx.x == 3){
+      pixValue*= pixels[pixelIndex(x - 1, y + 1, width)];
+    }else if(tx==3){
       pixValue = 2;
-    }
-  }else{
-    if((threadIdx.x == 0)||(threadIdx.x == 2)){
+      pixValue*= pixels[pixelIndex(x + 1, y - 1, width)];
+    }else if(tx==4){
       pixValue = -1;
+      pixValue*= pixels[pixelIndex(x + 1, y, width)];
+    }else if(tx==5){
+      pixValue = -1;
+      pixValue *=pixels[pixelIndex(x + 1, y + 1, width)];
     }
-    else if((threadIdx.x == 3)||(threadIdx.x == 5)){
-      pixValue = 1;
-    }
-    else if(threadIdx.x == 1){
+  }
+  else if (){
+    if(tx == 0){
+      pixValue = -1;
+      pixValue*= pixels[pixelIndex(x - 1, y - 1, width)];
+    }else if(tx==1){
       pixValue = -2;
-    }
-    else if(threadIdx.x == 4){
+      pixValue*= pixels[pixelIndex(x, y - 1, width)];
+    }else if(tx==2){
+      pixValue = -1;
+      pixValue*= pixels[pixelIndex(x + 1, y - 1, width)];
+    }else if(tx==3){
+      pixValue = 1;
+      pixValue*= pixels[pixelIndex(x - 1, y + 1, width)];
+    }else if(tx==4){
       pixValue = 2;
+      pixValue*= pixels[pixelIndex(x, y + 1, width)];
+    }else if(tx==5){
+      pixValue = 1;
+      pixValue*= pixels[pixelIndex(x + 1, y + 1, width)];
     }
   }
   // store in shared mem
-  int temp = pixValue;
-  temp *= pixels[pixelIndex(x + xOffset, y + yOffset, width)];
-  cache[cacheIndex] = temp;
-  // * pixels[x + xOffset, y + yOffset, width]
-  // //*logic probably in a while loop
-  // int temp = 0;
-
-  // int x00 = -1;
-  // int x20 = 1;
-  // int x01 = -2;
-  // int x21 = 2;
-  // int x02 = -1;
-  // int x22 = 1;
-  // x00 *= pixels[pixelIndex(x - 1, y - 1, width)];
-  // x01 *= pixels[pixelIndex(x - 1, y, width)];
-  // x02 *= pixels[pixelIndex(x - 1, y + 1, width)];
-  // x20 *= pixels[pixelIndex(x + 1, y - 1, width)];
-  // x21 *= pixels[pixelIndex(x + 1, y, width)];
-  // x22 *= pixels[pixelIndex(x + 1, y + 1, width)];
-
-  // int y00 = -1;
-  // int y10 = -2;
-  // int y20 = -1;
-  // int y02 = 1;
-  // int y12 = 2;
-  // int y22 = 1;
-  // y00 *= pixels[pixelIndex(x - 1, y - 1, width)];
-  // y10 *= pixels[pixelIndex(x, y - 1, width)];
-  // y20 *= pixels[pixelIndex(x + 1, y - 1, width)];
-  // y02 *= pixels[pixelIndex(x - 1, y + 1, width)];
-  // y12 *= pixels[pixelIndex(x, y + 1, width)];
-  // y22 *= pixels[pixelIndex(x + 1, y + 1, width)];
+  cache[cacheIndex] = pixValue;
 
   // **do this in thread 0 and save sqrt in mem not return
   if((threadIdx.x == 0) && (threadIdx.y == 0)){
