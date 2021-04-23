@@ -114,7 +114,7 @@ int main()
   {
     for (int j = 1; j < imgHeight - 1; j++)
     {
-      int sVal = c[i*width + j]; //change to use arr answers
+      int sVal = c[i*imgWidth + j]; //change to use arr answers
       aPixel.rgbRed = sVal;
       aPixel.rgbGreen = sVal;
       aPixel.rgbBlue = sVal;
