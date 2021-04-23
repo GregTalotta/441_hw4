@@ -26,6 +26,8 @@ int pixelIndex(int x, int y, int width)
 // Returns the sobel value for pixel x,y
 __global__ void sobel(int width, char *pixels, int *c)
 {
+  int y = blockIdx.y;
+  int x = blockIdx.x;
   int x00 = -1;
   int x20 = 1;
   int x01 = -2;
@@ -112,7 +114,7 @@ int main()
   {
     for (int j = 1; j < imgHeight - 1; j++)
     {
-      int sVal = sobel(i, j, imgWidth, pixels); //change to use arr answers
+      int sVal = c[i*width + j]; //change to use arr answers
       aPixel.rgbRed = sVal;
       aPixel.rgbGreen = sVal;
       aPixel.rgbBlue = sVal;
