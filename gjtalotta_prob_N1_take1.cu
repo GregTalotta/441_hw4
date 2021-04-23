@@ -41,11 +41,7 @@ __global__ void sobel(int width, char *pixels, int *c)
   int cacheIndex = pixelIndex(threadIdx.x, threadIdx.y, 12);
   
   // ** individual thread logic
-  int xOffset = 0;
   int pixValue;
-  int yOffset = 0;
-  int primaryOffset = 0;
-  int secondaryOffset = 0;
   int tx = threadIdx.x;
   if(threadIdx.y == 0){
     if(tx == 0){
