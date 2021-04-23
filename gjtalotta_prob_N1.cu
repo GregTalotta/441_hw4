@@ -18,7 +18,7 @@
 
 // Returns the index into the 1d pixel array
 // Given te desired x,y, and image width
-int pixelIndex(int x, int y, int width)
+__device__ int pixelIndex(int x, int y, int width)
 {
   return (y * width + x);
 }
