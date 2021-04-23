@@ -68,7 +68,7 @@ __global__ void sobel(int width, char *pixels, int *c)
       pixValue *=pixels[pixelIndex(x + 1, y + 1, width)];
     }
   }
-  else if (){
+  else{
     if(tx == 0){
       pixValue = -1;
       pixValue*= pixels[pixelIndex(x - 1, y - 1, width)];
