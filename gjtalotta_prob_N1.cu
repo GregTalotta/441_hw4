@@ -25,10 +25,10 @@ __device__ int pixelIndex(int x, int y, int width)
 // Returns the sobel value for pixel x,y
 __global__ void sobel(int width, int height, char *pixels, int *c)
 {
-  int x = blockIdx.y*blockDim.y + threadIdx.y;
-  int y = blockIdx.x*blockDim.x + threadIdx.x;
+  int x = blockIdx.y * blockDim.y + threadIdx.y;
+  int y = blockIdx.x * blockDim.x + threadIdx.x;
   // ignore edges
-  if(x > 0 && y > 0 && x < width-1 && y < height-1)
+  if (x > 0 && y > 0 && x < width - 1 && y < height - 1)
   {
     int x00 = -1;
     int x20 = 1;
@@ -107,25 +107,24 @@ int main()
   cudaMalloc((void **)&dev_pixels, sizeof(char) * imgWidth * imgHeight);
   cudaMemcpy(dev_pixels, pixels, sizeof(char) * imgWidth * imgHeight, cudaMemcpyHostToDevice);
 
-
-  // find max threads  
+  // find max threads
   int ansx = 0;
   int ansy = 0;
   int power = 2;
-  while(ansx ==0 && ansy == 0){
-    ansx = imgHeight%power;
-    ansy = imgWidth%power;
+  while (ansx == 0 && ansy == 0)
+  {
+    ansx = imgHeight % power;
+    ansy = imgWidth % power;
     power *= 2;
   }
   power /= 2;
-  dim3 threadsPerBlock(power, power);             //one thred per block
-  int xblocks = imgHeight/power;
-  int yblocks = imgWidth/power;
+  dim3 threadsPerBlock(power, power); //one thred per block
+  int xblocks = imgHeight / power;
+  int yblocks = imgWidth / power;
   dim3 numBlocks(xblocks, yblocks); // one block square pixel area
-  
-  sobel<<<numBlocks, threadsPerBlock>>>(imgWidth, imgHeight,dev_pixels, dev_c);
-  cudaMemcpy(c, dev_c, sizeof(int) * imgWidth * imgHeight, cudaMemcpyDeviceToHost);
 
+  sobel<<<numBlocks, threadsPerBlock>>>(imgWidth, imgHeight, dev_pixels, dev_c);
+  cudaMemcpy(c, dev_c, sizeof(int) * imgWidth * imgHeight, cudaMemcpyDeviceToHost);
 
   // Apply sobel operator to pixels, ignoring the borders ** change to use c arr
   FIBITMAP *bitmap = FreeImage_Allocate(imgWidth, imgHeight, 24);
@@ -133,7 +132,7 @@ int main()
   {
     for (int j = 1; j < imgHeight - 1; j++)
     {
-      int sVal = c[j*imgWidth + i]; //change to use arr answers
+      int sVal = c[j * imgWidth + i]; //change to use arr answers
       aPixel.rgbRed = sVal;
       aPixel.rgbGreen = sVal;
       aPixel.rgbBlue = sVal;
