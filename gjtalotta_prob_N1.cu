@@ -15,7 +15,6 @@
 #include "FreeImage.h"
 #include "stdio.h"
 #include "math.h"
-#define THREADS_PER_BLOCK_DIR 128
 // Returns the index into the 1d pixel array
 // Given te desired x,y, and image width
 __device__ int pixelIndex(int x, int y, int width)
@@ -109,13 +108,21 @@ int main()
   cudaMemcpy(dev_pixels, pixels, sizeof(char) * imgWidth * imgHeight, cudaMemcpyHostToDevice);
 
 
-  // ** change
-  dim3 threadsPerBlock(THREADS_PER_BLOCK_DIR, THREADS_PER_BLOCK_DIR);             //one thred per block
-  int xblocks = imgHeight/THREADS_PER_BLOCK_DIR;
-  int yblocks = imgWidth/THREADS_PER_BLOCK_DIR;
+  // find max threads  
+  int ansx = 0;
+  itn ansy = 0;
+  int power = 2;
+  while(ansx ==0 && ansy == 0){
+    ansx = imgHeight%power;
+    ansy = imgWidth%power;
+    power *= 2;
+  }
+  power /= 2;
+  dim3 threadsPerBlock(power, power);             //one thred per block
+  int xblocks = imgHeight/power;
+  int yblocks = imgWidth/power;
   dim3 numBlocks(xblocks, yblocks); // one block square pixel area
-  printf("height is: %d\n", xblocks);
-  printf("width is: %d\n", yblocks);
+  
   sobel<<<numBlocks, threadsPerBlock>>>(imgWidth, imgHeight,dev_pixels, dev_c);
   cudaMemcpy(c, dev_c, sizeof(int) * imgWidth * imgHeight, cudaMemcpyDeviceToHost);
 
