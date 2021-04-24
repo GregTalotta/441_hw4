@@ -15,7 +15,7 @@
 #include "FreeImage.h"
 #include "stdio.h"
 #include "math.h"
-#define THREADS_PER_BLOCK_DIR 4
+#define THREADS_PER_BLOCK_DIR 128
 // Returns the index into the 1d pixel array
 // Given te desired x,y, and image width
 __device__ int pixelIndex(int x, int y, int width)
@@ -114,8 +114,8 @@ int main()
   int xblocks = imgHeight/THREADS_PER_BLOCK_DIR;
   int yblocks = imgWidth/THREADS_PER_BLOCK_DIR;
   dim3 numBlocks(xblocks, yblocks); // one block square pixel area
-  printf("height is: %d\n", imgHeight);
-  printf("width is: %d\n", imgWidth);
+  printf("height is: %d\n", xblocks);
+  printf("width is: %d\n", yblocks);
   sobel<<<numBlocks, threadsPerBlock>>>(imgWidth, imgHeight,dev_pixels, dev_c);
   cudaMemcpy(c, dev_c, sizeof(int) * imgWidth * imgHeight, cudaMemcpyDeviceToHost);
 
