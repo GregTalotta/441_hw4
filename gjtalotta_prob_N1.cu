@@ -26,8 +26,8 @@ __device__ int pixelIndex(int x, int y, int width)
 // Returns the sobel value for pixel x,y
 __global__ void sobel(int width, char *pixels, int *c)
 {
-  int x = blockIdx.y;
-  int y = blockIdx.x;
+  int y = blockIdx.y;
+  int x = blockIdx.x;
   // ignore edges
   if(x > 0 && y > 0 && x < blockDim.x-1 && y < blockDim.y-1)
   {
