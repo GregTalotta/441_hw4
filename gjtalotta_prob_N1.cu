@@ -15,7 +15,7 @@
 #include "FreeImage.h"
 #include "stdio.h"
 #include "math.h"
-
+#define THREADS_PER_BLOCK_DIR 4
 // Returns the index into the 1d pixel array
 // Given te desired x,y, and image width
 __device__ int pixelIndex(int x, int y, int width)
@@ -26,8 +26,8 @@ __device__ int pixelIndex(int x, int y, int width)
 // Returns the sobel value for pixel x,y
 __global__ void sobel(int width, int height, char *pixels, int *c)
 {
-  int x = blockIdx.y;
-  int y = blockIdx.x;
+  int x = blockIdx.y*blockDim.y + threadIdx.y;
+  int y = blockIdx.x*blockDim.x + threadIdx.x;
   // ignore edges
   if(x > 0 && y > 0 && x < width-1 && y < height-1)
   {
@@ -110,8 +110,10 @@ int main()
 
 
   // ** change
-  dim3 threadsPerBlock(1);             //one thred per block
-  dim3 numBlocks(imgHeight, imgWidth); // one block per pixel
+  dim3 threadsPerBlock(THREADS_PER_BLOCK_DIR, THREADS_PER_BLOCK_DIR);             //one thred per block
+  int xblocks = imgHeight/THREADS_PER_BLOCK_DIR;
+  int yblocks = imgWidth/THREADS_PER_BLOCK_DIR;
+  dim3 numBlocks(xblocks, yblocks); // one block square pixel area
   printf("height is: %d\n", imgHeight);
   printf("width is: %d\n", imgWidth);
   sobel<<<numBlocks, threadsPerBlock>>>(imgWidth, imgHeight,dev_pixels, dev_c);
