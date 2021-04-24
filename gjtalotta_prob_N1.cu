@@ -110,7 +110,7 @@ int main()
 
   // find max threads  
   int ansx = 0;
-  itn ansy = 0;
+  int ansy = 0;
   int power = 2;
   while(ansx ==0 && ansy == 0){
     ansx = imgHeight%power;
