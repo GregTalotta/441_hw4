@@ -107,7 +107,7 @@ int main()
   cudaMalloc((void **)&dev_pixels, sizeof(char) * imgWidth * imgHeight);
   cudaMemcpy(dev_pixels, pixels, sizeof(char) * imgWidth * imgHeight, cudaMemcpyHostToDevice);
 
-  // find max threads
+  // find max threads and min blocks
   int ansx = 0;
   int ansy = 0;
   int power = 2;
@@ -123,10 +123,11 @@ int main()
   int yblocks = imgWidth / power;
   dim3 numBlocks(xblocks, yblocks); // one block square pixel area
 
+  // Apply sobel operator to pixels,
   sobel<<<numBlocks, threadsPerBlock>>>(imgWidth, imgHeight, dev_pixels, dev_c);
   cudaMemcpy(c, dev_c, sizeof(int) * imgWidth * imgHeight, cudaMemcpyDeviceToHost);
 
-  // Apply sobel operator to pixels, ignoring the borders ** change to use c arr
+  // Fill the bitmap
   FIBITMAP *bitmap = FreeImage_Allocate(imgWidth, imgHeight, 24);
   for (int i = 1; i < imgWidth - 1; i++)
   {
@@ -141,6 +142,9 @@ int main()
   }
   FreeImage_Save(FIF_PNG, bitmap, "coins-edge.png", 0);
 
+  free(c);
+  cudaFree(dev_c);
+  cudaFree(dev_pixels);
   free(pixels);
   FreeImage_Unload(bitmap);
   FreeImage_Unload(image);
