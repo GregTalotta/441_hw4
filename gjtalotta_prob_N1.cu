@@ -24,8 +24,9 @@ __device__ int pixelIndex(int x, int y, int width)
 }
 
 // Returns the sobel value for pixel x,y
-__global__ void sobel(int width, char *pixels, int *c)
+__global__ void sobel(char *pixels, int *c)
 {
+  width = blockDim.y;
   int x = blockIdx.y;
   int y = blockIdx.x;
   // ignore edges
@@ -114,7 +115,7 @@ int main()
   dim3 numBlocks(imgHeight, imgWidth); // one block per pixel
   printf("height is: %d\n", imgHeight);
   printf("width is: %d\n", imgWidth);
-  sobel<<<numBlocks, threadsPerBlock>>>(imgWidth, dev_pixels, dev_c);
+  sobel<<<numBlocks, threadsPerBlock>>>(dev_pixels, dev_c);
   cudaMemcpy(c, dev_c, sizeof(int) * imgWidth * imgHeight, cudaMemcpyDeviceToHost);
 
 
