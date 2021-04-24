@@ -111,7 +111,7 @@ int main()
 
   // ** change
   dim3 threadsPerBlock(1);             //one thred per block
-  dim3 numBlocks( imgHeight, imgWidth); // one block per pixel
+  dim3 numBlocks(imgWidth, imgHeight); // one block per pixel
   sobel<<<numBlocks, threadsPerBlock>>>(imgWidth, dev_pixels, dev_c);
   cudaMemcpy(c, dev_c, sizeof(int) * imgWidth * imgHeight, cudaMemcpyDeviceToHost);
 
